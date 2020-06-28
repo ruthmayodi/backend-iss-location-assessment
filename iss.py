@@ -54,6 +54,26 @@ def screen_setup(screen):
     iss.shape('iss.gif')
 
 
+def over_indianapolis(long, lat):
+    payload = {'lat': lat, 'lon': long}
+    res = requests.get('http://api.open-notify.org/iss-pass.json',
+                       params=payload)
+    if res.status_code == 200:
+        res_obj = json.loads(res.text)
+        return res_obj['response'][0]['risetime']
+    else:
+        print('did you mean to do that?', res.status_code)
+
+
+def plot_indianapolis():
+    global in_loc
+    in_loc.penup()
+    in_loc.goto(-86.159536, 39.778117)
+    next_time = over_indianapolis(-86.159536, 39.778117)
+    next_time = time.ctime(next_time)
+    in_loc.write(next_time)
+
+
 
     
 
@@ -67,6 +87,7 @@ def main():
     screen = turtle.Screen()
     screen_setup(screen)
     iss_location()
+    plot_indianapolis()
 
 
 if __name__ == '__main__':
